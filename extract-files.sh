@@ -18,6 +18,9 @@
 
 set -e
 
+export DEVICE=vince
+export VENDOR=xiaomi
+
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$MY_DIR" ]]; then MY_DIR="$PWD"; fi
@@ -66,40 +69,8 @@ fi
 
 DEVICE_BLOB_ROOT="$LINEAGE_ROOT"/vendor/"$VENDOR"/"$DEVICE"/proprietary
 
-if [ "$DEVICE" = "tissot" ]; then
-patchelf --remove-needed libbacktrace.so "$DEVICE_BLOB_ROOT"/lib64/hw/gf_fingerprint.default.so
-patchelf --remove-needed libunwind.so "$DEVICE_BLOB_ROOT"/lib64/hw/gf_fingerprint.default.so
-patchelf --remove-needed libkeystore_binder.so "$DEVICE_BLOB_ROOT"/lib64/hw/gf_fingerprint.default.so
-patchelf --remove-needed libsoftkeymasterdevice.so "$DEVICE_BLOB_ROOT"/lib64/hw/gf_fingerprint.default.so
-patchelf --remove-needed libsoftkeymaster.so "$DEVICE_BLOB_ROOT"/lib64/hw/gf_fingerprint.default.so
-patchelf --remove-needed libkeymaster_messages.so "$DEVICE_BLOB_ROOT"/lib64/hw/gf_fingerprint.default.so
-
-patchelf --remove-needed libbacktrace.so "$DEVICE_BLOB_ROOT"/lib64/libgoodixfingerprintd_binder.so
-patchelf --remove-needed libunwind.so "$DEVICE_BLOB_ROOT"/lib64/libgoodixfingerprintd_binder.so
-patchelf --remove-needed libkeystore_binder.so "$DEVICE_BLOB_ROOT"/lib64/libgoodixfingerprintd_binder.so
-patchelf --remove-needed libsoftkeymasterdevice.so "$DEVICE_BLOB_ROOT"/lib64/libgoodixfingerprintd_binder.so
-patchelf --remove-needed libsoftkeymaster.so "$DEVICE_BLOB_ROOT"/lib64/libgoodixfingerprintd_binder.so
-
-patchelf --remove-needed libbacktrace.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0-service.so
-patchelf --remove-needed libunwind.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0-service.so
-patchelf --remove-needed libkeystore_binder.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0-service.so
-patchelf --remove-needed libsoftkeymasterdevice.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0-service.so
-patchelf --remove-needed libsoftkeymaster.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0-service.so
-patchelf --remove-needed libkeymaster_messages.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0-service.so
-
-patchelf --remove-needed libbacktrace.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0.so
-patchelf --remove-needed libunwind.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0.so
-patchelf --remove-needed libkeystore_binder.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0.so
-patchelf --remove-needed libsoftkeymasterdevice.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0.so
-patchelf --remove-needed libsoftkeymaster.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0.so
-patchelf --remove-needed libkeymaster_messages.so "$DEVICE_BLOB_ROOT"/vendor/lib64/libvendor.goodix.hardware.fingerprint@1.0.so
-
-fi
-
-if [ "$DEVICE" = "mido" ]; then
-    # Hax for cam configs
-    CAMERA2_SENSOR_MODULES="$LINEAGE_ROOT"/vendor/"$VENDOR"/"$DEVICE"/proprietary/vendor/lib/libmmcamera2_sensor_modules.so
-    sed -i "s|/system/etc/camera/|/vendor/etc/camera/|g" "$CAMERA2_SENSOR_MODULES"
-fi
+patchelf --remove-needed vendor.xiaomi.hardware.mtdservice@1.0.so "$BLOB_ROOT"/vendor/bin/mlipayd@1.1
+patchelf --remove-needed vendor.xiaomi.hardware.mtdservice@1.0.so "$BLOB_ROOT"/vendor/lib64/libmlipay.so
+patchelf --remove-needed vendor.xiaomi.hardware.mtdservice@1.0.so "$BLOB_ROOT"/vendor/lib64/libmlipay@1.1.so sed -i "s|/system/etc/camera/|/vendor/etc/camera/|g" "$CAMERA2_SENSOR_MODULES"
 
 "$MY_DIR"/setup-makefiles.sh

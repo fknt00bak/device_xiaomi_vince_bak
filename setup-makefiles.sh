@@ -18,6 +18,8 @@
 
 set -e
 
+export DEVICE=vince
+export VENDOR=xiaomi
 INITIAL_COPYRIGHT_YEAR=2017
 
 # Load extract_utils and do some sanity checks
@@ -37,10 +39,10 @@ fi
 setup_vendor "$DEVICE_COMMON" "$VENDOR" "$LINEAGE_ROOT" true
 
 # Copyright headers and guards
-write_headers "mido tissot vince"
+write_headers "vince"
 
 # The standard common blobs
-write_makefiles "$MY_DIR"/proprietary-files-qc.txt true
+write_makefiles "$MY_DIR"/proprietary-files.txt true
 
 # We are done!
 write_footers
